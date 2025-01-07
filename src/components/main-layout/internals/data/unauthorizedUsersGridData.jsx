@@ -1,38 +1,14 @@
-import selectSessionToken from "@/lib/features/sessionToken/slices/sessionTokenMemoSelector";
+import DoctoralCenterAPI from "@/lib/api/doctralCenter";
 import { formatDateTime } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-
-const fetchUnauthorizedUsers = async (accessToken) => {
-  try {
-    const response = await fetch(
-      "/api/doctoralCenter/admin/unauthorized-users",
-      {
-        method: "GET",
-        headers: {
-          Authorization: accessToken
-        }
-      }
-    );
-    const result = await response.json();
-    return result.data;
-  } catch (exception) {
-    console.error(
-      `Server error when trying to fetch unauthorized users in ${exception}`
-    );
-  }
-};
 
 export default function UnauthorizedUsersData() {
   const [rows, setRows] = useState([]);
-
-  const sessionToken = useSelector(selectSessionToken);
+  const { fetchUnauthorizedUsers } = DoctoralCenterAPI();
 
   useEffect(() => {
     const getUnauthorizedUsers = async () => {
-      const unauthorizedUsers = await fetchUnauthorizedUsers(
-        sessionToken.accessToken
-      );
+      const unauthorizedUsers = await fetchUnauthorizedUsers();
 
       // NOTE: Format datetime
       unauthorizedUsers.forEach((user) => {
