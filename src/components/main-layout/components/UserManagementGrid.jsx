@@ -33,7 +33,7 @@ export default function UserManagementGrid() {
           headers: {
             Authorization: sessionToken.accessToken
           },
-          body: JSON.stringify(selectedUser.oid)
+          body: JSON.stringify({ oid: selectedUser.oid })
         }
       );
     } catch (exception) {

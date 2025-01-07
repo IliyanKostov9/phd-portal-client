@@ -7,7 +7,7 @@ import selectDoctoralCenter from "@/lib/features/doctoralCenter/slices/doctoralC
 
 const fetchAuthUsers = async (accessToken) => {
   try {
-    const response = await fetch("/api/doctoralCenter/admin/authenthicated", {
+    const response = await fetch("/api/doctoralCenter/admin/authenticated", {
       method: "GET",
       headers: {
         Authorization: accessToken
