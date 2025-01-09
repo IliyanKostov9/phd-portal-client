@@ -1,12 +1,15 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { url } from "./url";
+import logger from "@/app/logger";
 
 export async function GET() {
   try {
     const reqHeaders = await headers();
     const accessToken = reqHeaders.get("authorization");
     const cookie = reqHeaders.get("Cookie");
+
+    logger.info("Admin is attempting to retrieve all authorized users...");
 
     const res = await fetch(url, {
       method: "GET",

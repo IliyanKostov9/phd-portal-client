@@ -4,18 +4,24 @@ import { useEffect, useState } from "react";
 
 export default function UnauthorizedUsersData() {
   const [rows, setRows] = useState([]);
+  const [getUnauthorizedLoading, setGetUnauthorizedLoading] = useState(false);
   const { fetchUnauthorizedUsers } = DoctoralCenterAPI();
 
   useEffect(() => {
     const getUnauthorizedUsers = async () => {
+      setGetUnauthorizedLoading(true);
       const unauthorizedUsers = await fetchUnauthorizedUsers();
 
-      // NOTE: Format datetime
-      unauthorizedUsers.forEach((user) => {
-        const userTimestamp = user.timestamp;
-        user.formattedTimestamp = formatDateTime(userTimestamp);
-      });
-      setRows(unauthorizedUsers);
+      if (unauthorizedUsers != null) {
+        // NOTE: Format datetime
+        unauthorizedUsers.forEach((user) => {
+          const userTimestamp = user.timestamp;
+          user.formattedTimestamp = formatDateTime(userTimestamp);
+        });
+        setRows(unauthorizedUsers);
+      }
+
+      setGetUnauthorizedLoading(false);
     };
 
     getUnauthorizedUsers();
@@ -53,6 +59,7 @@ export default function UnauthorizedUsersData() {
   return {
     rows,
     columns,
-    setRowsByParam
+    setRowsByParam,
+    getUnauthorizedLoading
   };
 }

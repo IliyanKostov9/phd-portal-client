@@ -34,7 +34,8 @@ const data = [
 ];
 
 export default function UnauthorizedUsersGrid() {
-  const { rows, columns, setRowsByParam } = UnauthorizedUsersData();
+  const { rows, columns, setRowsByParam, getUnauthorizedLoading } =
+    UnauthorizedUsersData();
   const [selectedRows, setSelectedRows] = useState([]);
   const [roleOption, setRoleOption] = useState();
   const { setUnauthorizedUserRoles } = DoctoralCenterAPI();
@@ -95,7 +96,7 @@ export default function UnauthorizedUsersGrid() {
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 9 }}>
           <Box>
-            {rows.length == 0 ? (
+            {getUnauthorizedLoading ? (
               <>
                 <Typography
                   textAlign="center"

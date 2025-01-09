@@ -2,8 +2,6 @@ import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import StatCard from "./StatCard";
-import { useSelector } from "react-redux";
-import selectSessionToken from "@/lib/features/sessionToken/slices/sessionTokenMemoSelector";
 import ConfirmDialogYesNo from "@/components/dialog/ConfirmDialogYesNo";
 import UserManagementData from "../internals/data/UserManagementGridData";
 import LoadingPageCircle from "@/components/loading/LoadingPageCircle";
@@ -21,7 +19,8 @@ export default function UserManagementGrid() {
     openDialogBoxYesNo,
     setOpenDialogBoxYesNo,
     selectedUser,
-    setRows
+    setRows,
+    getAuthorizedUsers
   } = UserManagementData();
 
   const { deleteAuthorizedUser } = DoctoralCenterAPI();
@@ -55,7 +54,7 @@ export default function UserManagementGrid() {
       </Typography>
       <Grid container spacing={2} columns={12}>
         <Box>
-          {rows.length == 0 ? (
+          {getAuthorizedUsers ? (
             <>
               <Typography
                 textAlign="center"

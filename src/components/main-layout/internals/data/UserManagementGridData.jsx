@@ -13,17 +13,21 @@ export default function UserManagementData() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogContent, setDialogContent] = useState("");
   const [selectedUser, setSelectedUser] = useState();
+  const [getAuthorizedUsers, setGetAuthorizedUsers] = useState(false);
 
   const doctoralCenter = useSelector(selectDoctoralCenter);
   const { fetchAutorizedUsers } = DoctoralCenterAPI();
 
   useEffect(() => {
     const getAuthUsers = async () => {
+      setGetAuthorizedUsers(true);
       const authUsers = await fetchAutorizedUsers();
-      setRows(authUsers);
+
+      if (authUsers != null) setRows(authUsers);
     };
 
     getAuthUsers();
+    setGetAuthorizedUsers(false);
   }, [setRows]);
 
   const handleOpenMenu = (event, row) => {
@@ -112,6 +116,7 @@ export default function UserManagementData() {
     selectedUser,
     setRows,
     dialogTitle,
-    dialogContent
+    dialogContent,
+    getAuthorizedUsers
   };
 }

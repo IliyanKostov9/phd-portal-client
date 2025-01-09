@@ -7,7 +7,7 @@ import { setPhd } from "@/lib/features/phd/slices/phdSlice";
 import { setDoctoralCenter } from "@/lib/features/doctoralCenter/slices/doctoralCenterSlice";
 import { setCommittee } from "@/lib/features/committee/slices/committeeSlice";
 import Auth from "@/lib/auth/auth";
-import UnauthorizedAPI from "@/lib/api/unautharized";
+import UnauthorizedAPI from "@/lib/api/unauthorized";
 
 export default function AuthHook() {
   const { handleLogin } = Auth();
