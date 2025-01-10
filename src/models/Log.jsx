@@ -1,33 +1,35 @@
 import LogsAPI from "@/lib/api/logs";
 
-const Transport = require("winston-transport");
+export default class Log {
+  constructor({ description, action, level }) {
+    this.description = description;
+    this.timestamp = new Date().toISOString();
+    this.action = action;
+    this.level = level;
 
-class Log extends Transport {
-  constructor(opts) {
-    super(opts);
-
-    this.action = opts.action;
-    this.user = opts.user;
+    this.user = {
+      oid: "",
+      name: "",
+      email: "",
+      group: ""
+    };
   }
 
-  async log(info, callback) {
-    setImmediate(() => {
-      this.emit("logged", info);
-    });
-
-    const log = {
-      description: info.message,
-      timestamp: new Date().toISOString(),
-      action: this.action,
-      level: info.level,
-      user: this.user
+  setUser({ oid, name, email, group }) {
+    this.user = {
+      oid: oid,
+      name: name,
+      email: email,
+      group: group
     };
+  }
 
+  static info(description, action) {
+    const level = "INFO";
+
+    const log = new Log(description, action, level);
     const { saveLog } = LogsAPI();
-    await saveLog(log);
 
-    callback(null, true);
+    saveLog(log);
   }
 }
-
-module.exports = Log;

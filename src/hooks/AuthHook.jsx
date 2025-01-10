@@ -34,7 +34,6 @@ export default function AuthHook() {
   useEffect(() => {
     const handleAuth = async () => {
       const response = await handleLogin();
-
       if (response) {
         const userCreds = {
           oid: response.idTokenClaims.oid,
@@ -42,12 +41,17 @@ export default function AuthHook() {
           email: response.idTokenClaims.email,
           timestamp: Date.now()
         };
-        const accessToken = response.accessToken;
-        dispatch(setSessionToken({ accessToken }));
 
-        const loginResponse = await fetchLogin(userCreds, accessToken);
+        const loginResponse = await fetchLogin(userCreds, response.accessToken);
         // TODO: Improve this checking
         if ("group" in loginResponse) {
+          console.log(`Group is: ${loginResponse.group}`);
+          const session = {
+            group: loginResponse.group,
+            accessToken: response.accessToken
+          };
+          dispatch(setSessionToken({ session }));
+
           evaluateRole(loginResponse.data, loginResponse.group);
           router.push("/" + loginResponse.group);
         } else router.push(loginResponse);

@@ -3,6 +3,7 @@ import { mainListItems } from "@/components/app/doctoralCenter/admin/mainListIte
 import HomeDoctralCenterGrid from "@/components/main-layout/components/HomeDoctralCenterGrid";
 import Layout from "@/components/main-layout/Layout";
 import selectDoctoralCenter from "@/lib/features/doctoralCenter/slices/doctoralCenterMemoSelector";
+import Log from "@/models/Log";
 import { useSelector } from "react-redux";
 
 export default function Page() {
@@ -12,6 +13,8 @@ export default function Page() {
     email: doctoralCenter.email,
     picture: doctoralCenter.picture
   };
+
+  Log.info("Admin has entered home page!", "Visit");
 
   return (
     <Layout
