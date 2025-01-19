@@ -14,6 +14,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 import DoctoralCenterAPI from "@/lib/api/doctralCenter";
 import BarChartDashboard from "./BarChartDashboard";
+import { getMonth } from "@/lib/utils";
 
 const data = [];
 
@@ -24,6 +25,33 @@ const dashboardStruct = {
   trend: "neutral",
   data: []
 };
+
+const logsBarChartSeries = [
+  {
+    id: "INFO",
+    label: "Информация",
+    data: [],
+    stack: "A"
+  },
+  {
+    id: "SUCCESS",
+    label: "Успешност",
+    data: [],
+    stack: "A"
+  },
+  {
+    id: "WARN",
+    label: "Предупреждение",
+    data: [],
+    stack: "A"
+  },
+  {
+    id: "ERROR",
+    label: "Грешка",
+    data: [],
+    stack: "A"
+  }
+];
 
 const userGroupsVariantLabels = [
   {
@@ -79,8 +107,12 @@ export default function HomeDoctoralCenterGrid() {
   const [userGroupsChartData, setUserGroupsChartData] = useState(
     userGroupsPieChartData
   );
+  const [logsChartData, setLogsChartData] = useState(logsBarChartSeries);
+
   const [users, setUsers] = useState([]);
-  const { fetchAutorizedUsers, fetchUnauthorizedUsers } = DoctoralCenterAPI();
+  const [logs, setLogs] = useState([]);
+  const { fetchAutorizedUsers, fetchUnauthorizedUsers, getLogs } =
+    DoctoralCenterAPI();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -111,6 +143,34 @@ export default function HomeDoctoralCenterGrid() {
 
     getUsers();
   }, [setUsers]);
+
+  useEffect(() => {
+    const getServerLogs = async () => {
+      const fetchedLogs = await getLogs();
+      setLogs(fetchedLogs);
+
+      setLogsChartData(assignLogsDataValue(fetchedLogs));
+    };
+
+    getServerLogs();
+  }, [setLogs]);
+
+  const assignLogsDataValue = (logs) => {
+    const barChartStuct = logsBarChartSeries;
+
+    const infoLogs = logs.filter((log) => log.level == "INFO");
+    infoLogs.sort(
+      (logA, logB) => getMonth(logA.timestamp) > getMonth(logB.timestamp)
+    );
+
+    console.log(`Info is: ${JSON.stringify(infoLogs)}`);
+
+    for (let ii = 0; ii < barChartStuct.length; ii++) {
+      barChartStuct[ii].data = infoLogs.length;
+    }
+
+    return barChartStuct;
+  };
 
   const assignUserGroupsDataValue = (
     pieChartDataStruct,
@@ -172,7 +232,7 @@ export default function HomeDoctoralCenterGrid() {
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
             <PieChartDiagram
-              title={""}
+              title={"Потребители в системата"}
               chartAvgValue={getSumUsers().toString()}
               pieChartLabels={userGroupsData}
               data={userGroupsChartData}
@@ -181,7 +241,12 @@ export default function HomeDoctoralCenterGrid() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <BarChartDashboard title={"Lo"} description={"Lo"} avgValue={"Lo"} />
+          <BarChartDashboard
+            title={"Събития"}
+            description={"Времева линия на събитията"}
+            avgValue={"0"}
+            logsBarChartSeries={logsChartData}
+          />
         </Grid>
       </Grid>
       <Grid container spacing={2} columns={12}>

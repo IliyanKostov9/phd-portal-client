@@ -20,3 +20,8 @@ export const formatToServerTimestamp = (isoString) => {
 
   return formatted;
 };
+
+export const getMonth = (dateTime) => {
+  const date = new Date(dateTime);
+  return date.getMonth();
+};
